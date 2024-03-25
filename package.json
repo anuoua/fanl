@@ -1,0 +1,19 @@
+{
+  "name": "fanl",
+  "module": "index.ts",
+  "version": "0.0.0",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@app-route/core": "^0.0.1-6",
+    "@app-route/resolve-restful": "^0.0.1-1"
+  }
+}
