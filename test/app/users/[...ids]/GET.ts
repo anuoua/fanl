@@ -1,7 +1,7 @@
-import { useParams } from "../../../../src/compose"
+import { useParams } from "../../../../src/context";
 
 export default () => {
   const params = useParams<{ ids: string[] }>();
 
-  return new Response(params.ids.join(','))
-}
+  return new Response(params.ids.join(","));
+};

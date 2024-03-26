@@ -1,9 +1,19 @@
-const context = new WeakMap();
+import type { Context } from "./type";
 
-export const setContext = <T>(req: Request, data: T) => {
-  context.set(req, data);
-}
+const ctxMap = new WeakMap();
 
-export const getContext = <T = unknown>(req: Request) => {
-  return context.get(req) as T;
-}
+let ctx: any;
+
+export const setContext = <T extends Context>(req: Request, data: T) => {
+  ctxMap.set(req, data);
+};
+
+export const getContext = <T extends Context>(req: Request) => {
+  return (ctx = ctxMap.get(req) as T);
+};
+
+export const useParams = <T = Record<string, any>>() => {
+  return ctx.params as T;
+};
+
+export const useContext = <C = Context>() => ctx as C;

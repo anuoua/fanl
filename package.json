@@ -1,8 +1,14 @@
 {
   "name": "fanl",
-  "module": "index.ts",
   "version": "0.0.0",
   "type": "module",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "build": "bun run build.ts && bun run build:types",
+    "build:types": "tsc -p tsconfig.build.json"
+  },
   "files": [
     "dist"
   ],
