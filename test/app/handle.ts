@@ -1,7 +1,7 @@
-import { useContext } from "../../src/context";
+import { getContext } from "../../src/context";
 
 export function POST(req: Request) {
-  const ctx = useContext();
+  const ctx = getContext();
   return new Response(`${ctx.user}:${ctx.token}`);
 }
 

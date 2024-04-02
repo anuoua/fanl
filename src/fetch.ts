@@ -1,5 +1,5 @@
 import { build, match } from "@app-route/core";
-import { setContext } from "./context";
+import { setCtxMap } from "./context";
 import { innerCompose } from "./compose";
 import { resolve } from "./resolve";
 import { response404 } from "./utils";
@@ -16,7 +16,7 @@ export const createFanlFetch = async (appRoute: string) => {
 
     if (!matched) {
       if (root[0].resolved?.miss) {
-        setContext(req, { params: {}, ...context });
+        setCtxMap(req, { params: {}, ...context });
         return (await import(root[0].resolved?.miss)).default(req);
       } else {
         return response404.clone();
@@ -58,7 +58,7 @@ export const createFanlFetch = async (appRoute: string) => {
       endPoint && awaitMiddlewares.push(endPoint);
     }
 
-    setContext(req, { params, ...context });
+    setCtxMap(req, { params, ...context });
 
     return (await innerCompose(awaitMiddlewares)(req)) ?? response404.clone();
   };

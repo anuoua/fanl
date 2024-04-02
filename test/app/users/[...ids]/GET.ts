@@ -1,7 +1,7 @@
-import { useParams } from "../../../../src/context";
+import { getParams } from "../../../../src/context";
 
 export default () => {
-  const params = useParams<{ ids: string[] }>();
+  const params = getParams<{ ids: string[] }>();
 
   return new Response(params.ids.join(","));
 };

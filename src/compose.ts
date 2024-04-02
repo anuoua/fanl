@@ -1,9 +1,9 @@
-import { getContext } from "./context";
+import { getCtxMap } from "./context";
 import type { Middleware } from "./type";
 
 export const innerCompose = (middlewares: Middleware[]) => {
   const dispatch = (index: number) => (req: Request) => {
-    getContext(req);
+    getCtxMap(req);
     return middlewares[index](
       req,
       middlewares[index + 1] ? dispatch(index + 1) : undefined!
