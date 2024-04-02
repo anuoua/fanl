@@ -1,2 +1,2 @@
-export * from "./fetch";
-export * from "./compose";
+export { createFanlFetch } from "./fetch";
+export { compose } from "./compose";
