@@ -4,4 +4,5 @@ build({
   entrypoints: ["./src/index.ts"],
   external: ["@app-route/core", "@app-route/resolve-restful"],
   outdir: "dist",
+  target: "node",
 });
