@@ -1,4 +1,7 @@
-export type Middleware = (req: Request, next: Middleware) => Promise<Response>;
+export type Middleware = (
+  req: Request,
+  next: (req: Request) => Promise<Response>
+) => Promise<Response>;
 
 export type METHODS =
   | "GET"

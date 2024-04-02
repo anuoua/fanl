@@ -1,16 +1,24 @@
 import { getContext } from "./context";
 import type { Middleware } from "./type";
 
-export const middlewareCompose = (middlewares: Middleware[]) => {
-  const compose = (index: number) => async (req: Request) => {
+export const innerCompose = (middlewares: Middleware[]) => {
+  const dispatch = (index: number) => (req: Request) => {
     getContext(req);
-    const res = await middlewares[index](
+    return middlewares[index](
       req,
-      middlewares[index + 1]
-        ? compose(index + 1)
-        : async () => new Response(undefined, { status: 404 })
+      middlewares[index + 1] ? dispatch(index + 1) : undefined!
     );
-    return res ?? new Response(undefined, { status: 404 });
   };
-  return compose(0);
+  return dispatch(0);
+};
+
+export const compose = (...middlewares: Middleware[]) => {
+  const dispatch =
+    (index: number): Middleware =>
+    (req, next) => {
+      return middlewares[index](req, (req: Request) =>
+        middlewares[index + 1] ? dispatch(index + 1)(req, next) : next(req)
+      );
+    };
+  return dispatch(0);
 };
