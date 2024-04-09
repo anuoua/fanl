@@ -1,4 +1,4 @@
-# Fanl
+# Fanl [中文](README-zh_CN.md)
 
 Fanl is an extremely simple and easy-to-use js server framework driven by the `App Router` file system routing.
 
