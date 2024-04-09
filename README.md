@@ -1,10 +1,10 @@
 # Fanl
 
-Fanl 是一款由 `App Router` 文件系统路由驱动的，极致简单易用的 js 服务端框架。
+Fanl is an extremely simple and easy-to-use js server framework driven by the `App Router` file system routing.
 
-适配各类 js 运行时，`Bun` `Node` 等。
+Compatible with various js runtimes, such as `Bun` and `Node`.
 
-## 安装
+## Installation
 
 ```shell
 bun add fanl
@@ -12,21 +12,23 @@ bun add fanl
 npm i fanl
 # or
 pnpm add fanl
+
 ```
 
-## 使用
+## Usage
 
-**在 Bun 中使用**
+**Use in Bun**
 
-创建 app 目录
+Create the app directory
 
 ```
 app
 └── hello
     └── GET.ts
+
 ```
 
-编辑 `GET.ts`
+Edit `GET.ts`
 
 ```typescript
 export default (request: Request) => {
@@ -34,7 +36,7 @@ export default (request: Request) => {
 };
 ```
 
-在根目录创建 `main.ts`
+Create `main.ts` in the root directory
 
 ```typescript
 import { serve } from "bun";
@@ -48,15 +50,15 @@ serve({
 });
 ```
 
-**在 Node 中使用**
+**Use in Node**
 
-第一步：将上述 Bun 代码中 `*.ts` 改成 `*.mjs`
+Step 1: Change `*.ts` to `*.mjs` in the above Bun code
 
-第二步：引入 Node 兼容层。
+Step 2: Import the Node compatibility layer.
 
-> 由于 Node 本身的 HTTP Server API 并不兼容 Web 规范 Fetch API，故需要引入兼容层，幸运的是 [Hono](https://github.com/honojs/hono) 框架提供了 Node 兼容层 [hono/node-server](https://github.com/honojs/node-server)，很棒。
+> Since Node's own HTTP Server API is not compatible with the Web standard Fetch API, a compatibility layer is needed. Fortunately, the [Hono](https://github.com/honojs/hono) framework provides a Node compatibility layer [hono/node-server](https://github.com/honojs/node-server), which is great.
 
-安装 `@hono/node-server`，并修改 `main.mjs`
+Install `@hono/node-server` and modify `main.mjs`
 
 ```typescript
 import { serve } from "@hono/node-server";
@@ -70,38 +72,40 @@ serve({
 });
 ```
 
-运行
+Run
 
 ```shell
 bun run main.ts
 # or
 node main.mjs
+
 ```
 
-访问 http://localhost:8080/hello
+Visit http://localhost:8080/hello
 
-## App Router 文件系统路由
+## App Router File System Routing
 
-App Router 文件系统路由规范首先由 NextJS 设计并推广，其简单的使用方式和优秀的设计为 Fanl 提供了最直接的灵感，Fanl 选择将它实现为纯服务端框架的路由控制器。
+The App Router file system routing specification was first designed and popularized by NextJS, and its simple usage and excellent design provided the most direct inspiration for Fanl. Fanl chose to implement it as a route controller for pure server-side frameworks.
 
-**定义路由**
+**Define Routes**
 
-每个文件夹代表一个映射到 URL 段的路由段。要创建嵌套路由，您可以将文件夹相互嵌套。
+Each folder represents a route segment mapped to a URL segment. To create nested routes, you can nest folders within each other.
 
 ```
 app
 └── dashboard
     └── settings
+
 ```
 
-对应 URL
+Corresponding URLs
 
 - `/dashboard`
 - `/dashboard/settings`
 
-**创建接口**
+**Create Endpoints**
 
-在相应的路由目录下创建 GET.ts 接口文件。
+Create a GET.ts interface file in the corresponding route directory.
 
 ```
 app
@@ -109,6 +113,7 @@ app
     ├── GET.ts
     └── settings
         └── GET.ts
+
 ```
 
 GET.ts
@@ -119,18 +124,18 @@ export default (request: Request) => {
 };
 ```
 
-**请求**
+**Request**
 
-在浏览器内使用 fetch 请求接口。
+Use fetch to request the interface in the browser.
 
 ```typescript
 const res = await fetch("/dashboard");
 await res.text(); // hello
 ```
 
-### 动态路由
+### Dynamic Routes
 
-App Router 文件系统路由有三种类型的动态路由段
+The App Router file system routing has three types of dynamic route segments
 
 - `[slug]`
 - `[...slug]`
@@ -145,11 +150,12 @@ app
 │   └── [[...ids]]
 └── users
     └── [...ids]
+
 ```
 
-对应 URL、路由、参数匹配表
+Corresponding URLs, routes, and parameter matching table
 
-| URL          | 路由                | Params                       |
+| URL          | Route               | Params                       |
 | ------------ | ------------------- | ---------------------------- |
 | `/roles/a/b` | `roles/[id]/[name]` | `{ "id": "a", "name": "b" }` |
 | `/roles/a`   | `roles/[id]`        | `{ "id": "a" }`              |
@@ -160,31 +166,31 @@ app
 | `/posts/a`   | `posts/[[...ids]]`  | `{ "ids": ["a"] }`           |
 | `/posts`     | `posts/[[...ids]]`  | `{"ids": []}`                |
 
-在接口中获取 Params
+Get Params in the interface
 
 ```typescript
 import { useContext, useParams } from "fanl";
 
 export default (request: Request) => {
   const ctx = useContext(); // ctx.params;
-  const params = useParams<T>(); // 等于 useContext().params
+  const params = useParams<T>(); // equivalent to useContext().params
   return new Response("hello");
 };
 ```
 
-泛路由
+Wildcard Routes
 
-`[[...ids]]` 和 `[...ids]` 可以捕获剩余的路由段，两者都只能放在最深的目录下。
+`[[...ids]]` and `[...ids]` can capture the remaining route segments and can only be placed at the deepest level of the directory.
 
-两者的区别，前者是可选的，后者是必选的，可选段可以匹配已耗尽的 URL 段，对比上述匹配表中 URL `/user` 和 `/posts` 的匹配路由，你就能理解了。
+The difference between the two is that the former is optional, and the latter is required. An optional segment can match exhausted URL segments, as seen in the matching routes for the URLs `/user` and `/posts` in the table above.
 
-## 目录组成
+## Directory Structure
 
-### 接口
+### Interfaces
 
-文件名：`%METHOD%.ts`
+File name: `%METHOD%.ts`
 
-接口的实现文件，需要导出默认处理函数，%METHOD% 为所有 http 协议方法。
+The implementation file for the interface, which needs to export a default processing function, where %METHOD% is all http protocol methods.
 
 ```typescript
 export default (request: Request) => {
@@ -193,11 +199,11 @@ export default (request: Request) => {
 };
 ```
 
-### 综合接口
+### Composite Interfaces
 
-文件名：`handler.ts`
+File name: `handler.ts`
 
-当一个路由有多个接口实现，可以把所有方法都放入 handler，同时 handler 支持兜底处理。
+When a route has multiple interface implementations, all methods can be placed in the handler, and the handler supports fallback processing.
 
 ```typescript
 export const GET = () => {
@@ -208,25 +214,21 @@ export const POST = () => {
   return new Response("POST");
 };
 
-// 兜底
+// Fallback
 export default () => {
   return new Response("ALL");
 };
 ```
 
-**优先级**
+**Priority**
 
-当接口文件和综合接口定义了一样的接口方法，那么以接口文件为准，如果都没有定义，则走综合接口的兜底文件。
+When the interface file and the composite interface define the same interface method, the interface file takes precedence. If neither is defined, the fallback file in the composite interface is used.
 
-| 对象                    | 优先级 |
-| ----------------------- | ------ |
-| 接口文件                | 高     |
-| 综合接口文件 导出的接口 | 中     |
-| 综合接口文件 默认导出   | 低     |
+| Object | Priority | | ----------------------- | ------ | | Interface file | High | | Interface exported by composite interface file | Medium | | Default export of composite interface file | Low |
 
-### 中间件
+### Middleware
 
-中间件的实现和 koa 类似，洋葱圈模式。
+The implementation of middleware is similar to koa, using the onion ring model.
 
 ```
 app
@@ -236,9 +238,10 @@ app
     └── [id]
         ├── GET.ts
         └── middleware.ts #3
+
 ```
 
-假设上述中间件为简单的 log 中间件，如下：
+Assuming the above middleware is a simple log middleware, as follows:
 
 ```typescript
 export default (
@@ -252,7 +255,7 @@ export default (
 };
 ```
 
-请求 `/roles/a` 中间件执行顺序
+Execution order of middleware for the request `/roles/a`
 
 ```
 request #1
@@ -262,9 +265,10 @@ request #1
     response #3
   response #2
 response #1
+
 ```
 
-当一个路由有多个中间件，可以使用 compose 方法进行组合。
+When a route has multiple middleware, you can use the `compose` method to combine them.
 
 ```typescript
 import { compose } from "fanl";
