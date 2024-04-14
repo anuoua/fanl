@@ -224,7 +224,11 @@ export default () => {
 
 When the interface file and the composite interface define the same interface method, the interface file takes precedence. If neither is defined, the fallback file in the composite interface is used.
 
-| Object | Priority | | ----------------------- | ------ | | Interface file | High | | Interface exported by composite interface file | Medium | | Default export of composite interface file | Low |
+| Object                                         | Priority |
+| ---------------------------------------------- | -------- |
+| Interface file                                 | High     |
+| Interface exported by composite interface file | Medium   |
+| Default export of composite interface file     | Low      |
 
 ### Middleware
 
